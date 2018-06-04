@@ -18,8 +18,8 @@ class ProdukSearch extends Produk
     public function rules()
     {
         return [
-            [['id', 'codeProduk', 'Harga'], 'integer'],
-            [['namaProduk', 'deskripsiProduk', 'uploadDate'], 'safe'],
+            [['codeProduk', 'Harga'], 'integer'],
+            [['namaProduk','id', 'deskripsiProduk', 'uploadDate'], 'safe'],
         ];
     }
 
@@ -57,16 +57,18 @@ class ProdukSearch extends Produk
             return $dataProvider;
         }
 
+        $query->joinWith('id0');
+
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'codeProduk' => $this->codeProduk,
             'Harga' => $this->Harga,
             'uploadDate' => $this->uploadDate,
         ]);
 
         $query->andFilterWhere(['like', 'namaProduk', $this->namaProduk])
-            ->andFilterWhere(['like', 'deskripsiProduk', $this->deskripsiProduk]);
+            ->andFilterWhere(['like', 'deskripsiProduk', $this->deskripsiProduk])
+            ->andFilterWhere(['like', 'user.username', $this->id]);
 
         return $dataProvider;
     }

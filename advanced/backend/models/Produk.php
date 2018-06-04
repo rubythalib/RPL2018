@@ -19,6 +19,7 @@ use common\models\User;
  */
 class Produk extends \yii\db\ActiveRecord
 {
+    public $image1;
     /**
      * {@inheritdoc}
      */
@@ -35,9 +36,11 @@ class Produk extends \yii\db\ActiveRecord
         return [
             [['id', 'namaProduk', 'deskripsiProduk', 'Harga', 'uploadDate'], 'required'],
             [['id', 'Harga'], 'integer'],
+            [['image1'],'file'],
             [['deskripsiProduk'], 'string'],
             [['uploadDate'], 'safe'],
             [['namaProduk'], 'string', 'max' => 50],
+            [['image'],'string', 'max'=>200],
             [['id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id' => 'id']],
         ];
     }
@@ -54,6 +57,7 @@ class Produk extends \yii\db\ActiveRecord
             'deskripsiProduk' => 'Deskripsi Produk',
             'Harga' => 'Harga',
             'uploadDate' => 'Upload Date',
+            'image1'=>'Image',
         ];
     }
 

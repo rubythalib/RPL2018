@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
+use yii\web\ForbiddenHttpException;
 /**
  * ProdukController implements the CRUD actions for Produk model.
  */
@@ -77,6 +79,11 @@ class ProdukController extends Controller
         $model = new Produk();
 
         if ($model->load(Yii::$app->request->post())) {
+            $imageName= $model->namaProduk;
+            $model->image1=UploadedFile::getInstance($model,'image1');
+            $model->image1->saveAs('/var/www/html/advanced/image/'.$imageName.'.'.$model->image1->extension);
+
+            $model->image= $imageName.'.'.$model->image1->extension;
             $model->id=Yii::$app->user->id;
             $model->uploadDate = date('Y-m-d h:m:s');
             $model->save();
@@ -99,15 +106,23 @@ class ProdukController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->uploadDate = date('Y-m-d h:m:s');
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->codeProduk]);
-        }
+        $userId = Yii::$app->user->id;
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        if ($model->id != $userId)
+        {
+            throw new ForbiddenHttpException;
+        }else{
+
+            if ($model->load(Yii::$app->request->post())) {
+                $model->uploadDate = date('Y-m-d h:m:s');
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->codeProduk]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -119,9 +134,19 @@ class ProdukController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        
+        $userId = Yii::$app->user->id;
 
-        return $this->redirect(['index']);
+        if ($model->id != $userId)
+        {
+            throw new ForbiddenHttpException;
+            
+        }else{
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+        }
     }
 
     /**

@@ -56,7 +56,7 @@ class ProdukSearch extends Produk
             // $query->where('0=1');
             return $dataProvider;
         }
-
+        $query->joinWith('id0');
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
@@ -66,7 +66,8 @@ class ProdukSearch extends Produk
         ]);
 
         $query->andFilterWhere(['like', 'namaProduk', $this->namaProduk])
-            ->andFilterWhere(['like', 'deskripsiProduk', $this->deskripsiProduk]);
+            ->andFilterWhere(['like', 'deskripsiProduk', $this->deskripsiProduk])
+            ->andFilterWhere(['like', 'user.username', $this->id]);;
 
         return $dataProvider;
     }

@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * ProdukController implements the CRUD actions for Produk model.
@@ -78,7 +79,11 @@ class ProdukController extends Controller
         $model = new Produk();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->id=Yii::$app->user->id;
+            $imageName= $model->namaProduk;
+            $model->image1=UploadedFile::getInstance($model,'image1');
+            $model->image1->saveAs('/var/www/html/advanced/image/'.$imageName.'.'.$model->image1->extension);
+
+            $model->image= 'image/'.$imageName.'.'.$model->image1->extension;
             $model->uploadDate = date('Y-m-d h:m:s');
             $model->save();
             return $this->redirect(['view', 'id' => $model->codeProduk]);

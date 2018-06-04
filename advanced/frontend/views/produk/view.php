@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\Produk */
+/* @var $model backend\models\Produk */
 
 $this->title = $model->codeProduk;
 $this->params['breadcrumbs'][] = ['label' => 'Produks', 'url' => ['index']];
@@ -28,12 +28,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            // 'id',
+            'id0.username',
+            [
+                'attribute'=>'image',
+                'value'=> 'http://localhost/advanced/image/'.$model->image,
+                'format'=>['image',['widht'=>'500']],
+            ],
             'codeProduk',
             'namaProduk',
             // 'username',
             'deskripsiProduk:ntext',
             'Harga',
+            'id0.alamatToko',
             'uploadDate',
         ],
     ]) ?>

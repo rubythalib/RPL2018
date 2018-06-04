@@ -10,9 +10,11 @@ use yii\widgets\ActiveForm;
 
 <div class="produk-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options'=>['enctype'=>'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'namaProduk')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model,'image1')->fileInput();  ?>
 
     <?= $form->field($model, 'deskripsiProduk')->textarea(['rows' => 6]) ?>
 

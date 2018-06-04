@@ -1,6 +1,6 @@
 <?php
 namespace frontend\controllers;
-
+use common\models\User;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -24,29 +24,37 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+       'access' => [
+           'class' => AccessControl::className(),
+           'only' => ['logout', 'signup', 'about'],
+           'rules' => [
+               [
+                   'actions' => ['signup'],
+                   'allow' => true,
+                   'roles' => ['?'],
+               ],
+               [
+                   'actions' => ['logout'],
+                   'allow' => true,
+                   'roles' => ['@'],
+               ],
+               [
+                   'actions' => ['about'],
+                   'allow' => true,
+                   'roles' => ['@'],
+                   'matchCallback' => function ($rule, $action) {
+                       return User::isUserAdmin(Yii::$app->user->identity->username);
+                   }
+               ],
+           ],
+       ],
+       'verbs' => [
+           'class' => VerbFilter::className(),
+           'actions' => [
+               'logout' => ['post'],
+           ],
+       ],
+   ];
     }
 
     /**
